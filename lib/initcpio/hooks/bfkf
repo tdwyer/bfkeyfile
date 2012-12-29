@@ -1,0 +1,62 @@
+# vim: set ft=sh:
+#
+# GPLv3
+# Thomas Dwyer
+# tdwyer.tel
+#
+
+run_hook ()
+{
+    local encfile decfile attempts prompt badpassword poweroffmsg dev arg1 arg2 retcode password
+
+    if [ "x${bfkf}" != "x" ]; then
+        encfile="/enc_keyfile.bin"
+        decfile="/crypto_keyfile.bin"
+
+        iteration="1000"
+
+        prompt="Enter password: "
+        badpassword="Password incorrect"
+
+        dev="$(echo "${bfkf}" | cut -d: -f1)"
+        arg1="$(echo "${bfkf}" | cut -d: -f2)"
+        arg2="$(echo "${bfkf}" | cut -d: -f3)"
+
+        if poll_device "${dev}" "${rootdelay}"; then
+            case "${arg1}" in
+                *[!0-9]*)
+                    mkdir /mntkey
+                    mount -r -t "${arg1}" "${dev}" /mntkey
+                    dd if="/mntkey/${arg2}" of="${encfile}" >/dev/null 2>&1
+                    umount /mntkey
+                    rm -rf /mntkey
+                    ;;
+                *)
+                    dd if="${dev}" of="${encfile}" bs=1 skip="${arg1}" count="${arg2}" >/dev/null 2>&1
+                    ;;
+            esac
+        fi
+
+        if [ -f "${encfile}" ]; then
+            while true; do
+                read -rsp "${prompt}" password
+                passwordHash=$password
+                for (( i=1; i<=$iteration; i++ )); do
+                    passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+                done
+                password=$password$passwordHash`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+                openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${decfile}" >/dev/null 2>&1
+                retcode="$?"
+                if [ "${retcode}" != "0" ]; then
+                    echo -e "\n${badpassword}\n"
+                else
+                    break
+                fi
+            done
+
+            rm -f "${encfile}"
+        else
+            echo "Encrypted keyfile could not be opened. Reverting to 'encrypt' hook."
+        fi
+    fi
+}
