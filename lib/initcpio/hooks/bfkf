@@ -7,7 +7,7 @@
 
 run_hook ()
 {
-    local encfile decfile iteration prompt badpassword dev arg1 arg2 retcode password
+    local encfile decfile iteration prompt badpassword dev arg1 arg2 retcode password passwordHash
 
     if [ "x${bfkf}" != "x" ]; then
         encfile="/enc_keyfile.bin"
