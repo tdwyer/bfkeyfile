@@ -50,7 +50,7 @@ crypt () {
 
 decrypt () {
 	encfile=$1
-	outkey="crypto_keyfile.bin"
+	decfile="crypto_keyfile.bin"
 
 	echo "$encfile Will be decrypted to crypto_keyfile.bin"
 	echo ''
@@ -62,7 +62,7 @@ decrypt () {
 	done
 	password=$password$passwordHash
 
-	openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${outkey}"
+	openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${decfile}"
 }
 
 main $@
