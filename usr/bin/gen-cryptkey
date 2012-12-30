@@ -6,21 +6,66 @@
 #
 
 iteration=1000
-keyfile="enc_keyfile.bin"
 
-echo "$keyfile encrypted keyfile will be created"
-echo ''
-read -rsp "Enter password: " password
-echo ''
-read -rsp "Enter password Agin: " verify
-if [ $password == $verify ]; then
+create_msg='Create: gen-cryptkey create'
+decrypt_msg='Decrypt: gen-cryptkey decrypt PATH_TO_KEYFILE'
+
+main () {
+	action=""
+	if [ -z $1 ]; then
+		action="NULL"
+	else
+		action=$1
+	fi
+
+	if [ $action == "create" ]; then
+		crypt
+
+	elif [ $action == "decrypt" ]; then
+		decrypt $2
+
+	else
+		echo -e "Usage:\n$create_msg\n$decrypt_msg"
+	fi
+	exit 0
+}
+
+crypt () {
+	encfile="enc_keyfile.bin"
+
+	echo "$encfile encrypted encfile will be created"
+	echo ''
+	read -rsp "Enter password: " password
+	echo ''
+	read -rsp "Enter password Agin: " verify
+	if [ $password == $verify ]; then
+		passwordHash=$password
+		for (( i=1; i<=$iteration; i++ )); do
+			passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+		done
+		password=$password$passwordHash
+
+		dd if=/dev/urandom bs=1k count=512 | openssl bf-cbc -pass pass:"${password}" -out "${encfile}"
+	else
+		echo "Passwords did not match"
+	fi
+}
+
+decrypt () {
+	encfile=$1
+	outkey="crypto_keyfile.bin"
+
+	echo "$encfile Will be decrypted to crypto_keyfile.bin"
+	echo ''
+	read -rsp "Enter password: " password
+
 	passwordHash=$password
 	for (( i=1; i<=$iteration; i++ )); do
 		passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
 	done
 	password=$password$passwordHash
 
-	dd if=/dev/urandom bs=1k count=512 | openssl bf-cbc -pass pass:"${password}" -out "${keyfile}"
-else
-	echo "Passwords did not match"
-fi
+	openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${outkey}"
+}
+
+main $@
