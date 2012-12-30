@@ -44,7 +44,7 @@ run_hook ()
                 for (( i=1; i<=$iteration; i++ )); do
                     passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
                 done
-                password=$password$passwordHash`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+                password=$password$passwordHash
                 openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${decfile}" >/dev/null 2>&1
                 retcode="$?"
                 if [ "${retcode}" != "0" ]; then

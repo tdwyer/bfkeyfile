@@ -18,7 +18,7 @@ if [ $password == $verify ]; then
 	for (( i=1; i<=$iteration; i++ )); do
 		passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
 	done
-	password=$password$passwordHash`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+	password=$password$passwordHash
 
 	dd if=/dev/urandom bs=1k count=512 | openssl bf-cbc -pass pass:"${password}" -out "${keyfile}"
 else
