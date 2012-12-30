@@ -19,8 +19,11 @@ main () {
 		crypt
 
 	elif [ $action == "decrypt" ]; then
-		decrypt $2
-
+		if [ -z $2 -o -f $2 ]; then
+			echo -e "Usage:\n$create_msg\n$decrypt_msg"
+		else
+			decrypt $2
+		fi
 	else
 		echo -e "Usage:\n$create_msg\n$decrypt_msg"
 	fi
