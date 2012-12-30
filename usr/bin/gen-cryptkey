@@ -11,8 +11,8 @@ create_msg='Create: gen-cryptkey create'
 decrypt_msg='Decrypt: gen-cryptkey decrypt PATH_TO_KEYFILE'
 
 main () {
-	action=""
-	if [ -z $1 ]; then
+	action=$1
+	if [ -z $action ]; then
 		echo -e "Usage:\n$create_msg\n$decrypt_msg"
 
 	elif [ $action == "create" ]; then
