@@ -30,7 +30,7 @@ main () {
 crypt () {
 	encfile="enc_keyfile.bin"
 
-	echo "$encfile encrypted encfile will be created"
+	echo "$encfile encrypted keyfile will be created"
 	echo ''
 	read -rsp "Enter password: " password
 	echo ''
