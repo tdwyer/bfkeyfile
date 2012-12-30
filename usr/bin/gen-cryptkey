@@ -42,7 +42,7 @@ crypt () {
 		done
 		password=$password$passwordHash
 
-		dd if=/dev/urandom bs=1k count=512 | openssl bf-cbc -pass pass:"${password}" -salt -out "${encfile}"
+		dd if=/dev/urandom bs=1k count=256 | openssl bf-cbc -pass pass:"${password}" -salt -out "${encfile}"
 	else
 		echo "Passwords did not match"
 	fi
