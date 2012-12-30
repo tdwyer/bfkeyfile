@@ -18,11 +18,20 @@ cat<<HELPEOF
   The password is hashed with Whirlpool 1000 times
   Then your password + Hash is used to encrypt the keyfile
 
+  mkinitcpio.conf:
+  MODULES: add ext4 vfat or whatever the type of filesystem the keyfile is on
+  HOOKS=" ... usb bfkf encrypt ... filesystems ..."
+
   Kernel Parameters:
+  There is no need for cryptkey=
+
   Two options are supported:
   1) Using a file on the device:
      bfkf=<device>:<fs-type>:<path>
   2) Reading raw data from the block device:
      bfkf=<device>:<offset>:<size>
+
+  Example: /etc/default/grub
+  GRUB_CMDLINE_LINUX="bfkf=/dev/sdb1:ext4:/keyfile.bin cryptdevice=/dev/sda2:root"
 HELPEOF
 }
