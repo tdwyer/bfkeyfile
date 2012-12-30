@@ -34,7 +34,7 @@ crypt () {
 	echo ''
 	read -rsp "Enter password: " password
 	echo ''
-	read -rsp "Enter password Agin: " verify
+	read -rsp "Enter password Again: " verify
 	if [ $password == $verify ]; then
 		passwordHash=$password
 		for (( i=1; i<=$iteration; i++ )); do
