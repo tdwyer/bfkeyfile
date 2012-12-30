@@ -1,9 +1,4 @@
 # vim: set ft=sh:
-#
-# GPLv3
-# Thomas Dwyer
-# tomd.tel
-#
 
 run_hook ()
 {
