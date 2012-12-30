@@ -7,13 +7,14 @@
 
 run_hook ()
 {
-    local encfile decfile iteration prompt badpassword dev arg1 arg2 retcode password passwordHash
+    local encfile decfile iteration attempts prompt badpassword dev arg1 arg2 retcode password passwordHash
 
     if [ "x${bfkf}" != "x" ]; then
         encfile="/enc_keyfile.bin"
         decfile="/crypto_keyfile.bin"
 
-        iteration="1000"
+        iteration=1000
+        attempts=5
 
         prompt="Enter password: "
         badpassword="Password incorrect"
@@ -49,6 +50,8 @@ run_hook ()
                 retcode="$?"
                 if [ "${retcode}" != "0" ]; then
                     echo -e "\n${badpassword}\n"
+                    attempts=$(( ${attempts} - 1 ))
+                    [ "${attempts}" == "0" ] && break
                 else
                     break
                 fi
