@@ -1,14 +1,8 @@
 #!/bin/bash
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Needs build() not install ()
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-install ()
-{
-    MODULES=""
-    FILES=""
-    SCRIPT="bfkf"
-    add_binary "/usr/bin/openssl"
+build() {
+    add_binary /usr/bin/openssl
+    add_runscript
 }
 
 help ()
@@ -38,3 +32,5 @@ cat<<HELPEOF
   GRUB_CMDLINE_LINUX="bfkf=/dev/sdb1:ext4:/keyfile.bin cryptdevice=/dev/sda2:root"
 HELPEOF
 }
+
+# vim: set ft=sh ts=4 sw=4 et:
