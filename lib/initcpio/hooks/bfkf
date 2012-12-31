@@ -1,4 +1,7 @@
-# vim: set ft=sh:
+#!/usr/bin/ash
+#
+# for loop variable error line 40
+#
 
 run_hook ()
 {
@@ -36,11 +39,11 @@ run_hook ()
         if [ -f "${encfile}" ]; then
             while true; do
                 read -rsp "${prompt}" password
-                passwordHash=$password
-                for (( i=1; i<=$iteration; i++ )); do
-                    passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+                passwordHash=${password}
+                for (( i=1; ${i}<=${iteration}; i++ )); do
+                    passwordHash=`echo ${passwordHash} | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
                 done
-                password=$password$passwordHash
+                password=${password}${passwordHash}
                 openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${decfile}" >/dev/null 2>&1
                 retcode="$?"
                 if [ "${retcode}" != "0" ]; then
