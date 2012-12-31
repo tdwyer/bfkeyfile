@@ -39,7 +39,7 @@ run_hook ()
                 passwordHash=${password}
                 i=0
                 while [ ${i} -lt ${iteration} ]; do
-                    passwordHash=`echo ${passwordHash} | openssl dgst -whirlpool -hex 2> /dev/null | cut -d ' ' -f 2`
+                    passwordHash=`echo -n ${passwordHash} | openssl dgst -whirlpool -hex 2> /dev/null | cut -d ' ' -f 2`
                     i=$(( ${i} + 1 ))
                 done
                 password=${password}${passwordHash}

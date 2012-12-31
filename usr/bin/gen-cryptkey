@@ -43,7 +43,7 @@ crypt () {
 	if [[ $password1 == $password2 ]]; then
 		passwordHash=$password
 		for (( i=1; i<=$iteration; i++ )); do
-			passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+			passwordHash=`echo -n $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
 		done
 		password=$password$passwordHash
 
@@ -63,7 +63,7 @@ decrypt () {
 
 	passwordHash=$password
 	for (( i=1; i<=$iteration; i++ )); do
-		passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+		passwordHash=`echo -n $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
 	done
 	password=$password$passwordHash
 
