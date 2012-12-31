@@ -19,7 +19,7 @@ main () {
 		crypt
 
 	elif [ $action == "decrypt" ]; then
-		if [ -z $2 -o -f $2 ]; then
+		if [ -z $2 ]; then
 			echo -e "Usage:\n$create_msg\n$decrypt_msg"
 		else
 			decrypt $2
@@ -36,9 +36,11 @@ crypt () {
 	echo "$encfile encrypted keyfile will be created"
 	echo ''
 	read -rsp "Enter password: " password
+	password1=`echo $password | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
 	echo ''
 	read -rsp "Enter password Again: " verify
-	if [ $password == $verify ]; then
+	password2=`echo $verify | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+	if [[ $password1 == $password2 ]]; then
 		passwordHash=$password
 		for (( i=1; i<=$iteration; i++ )); do
 			passwordHash=`echo $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
