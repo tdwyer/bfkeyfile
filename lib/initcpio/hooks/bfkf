@@ -46,7 +46,7 @@ run_hook ()
                 if [ "${retcode}" != "0" ]; then
                     echo -e "\n${badpassword}\n"
                     attempts=$(( ${attempts} - 1 ))
-                    [ "${attempts}" == "0" ] && break
+                    [ "${attempts}" == "0" ] && echo "Keyfile could not be decrypted" && break
                 else
                     break
                 fi
