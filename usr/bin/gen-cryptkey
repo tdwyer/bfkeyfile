@@ -36,16 +36,15 @@ crypt () {
 	echo "$encfile encrypted keyfile will be created"
 	echo ''
 	read -rsp "Enter password: " password
-	password1=`echo $password | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+	password1=`echo -n "$password" | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
 	echo ''
 	read -rsp "Enter password Again: " verify
-	password2=`echo $verify | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
-	if [[ $password1 == $password2 ]]; then
-		passwordHash=$password
+	password2=`echo -n "$verify" | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+	if [[ "$password1" == "$password2" ]]; then
+
 		for (( i=1; i<=$iteration; i++ )); do
-			passwordHash=`echo -n $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+			password=`echo -n "$password" | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
 		done
-		password=$password$passwordHash
 
 		dd if=/dev/urandom bs=1k count=256 | openssl bf-cbc -pass pass:"${password}" -salt -out "${encfile}"
 	else
@@ -61,11 +60,9 @@ decrypt () {
 	echo ''
 	read -rsp "Enter password: " password
 
-	passwordHash=$password
 	for (( i=1; i<=$iteration; i++ )); do
-		passwordHash=`echo -n $passwordHash | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+		password=`echo -n "$password" | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
 	done
-	password=$password$passwordHash
 
 	openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${decfile}"
 }

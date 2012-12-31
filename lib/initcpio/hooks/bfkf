@@ -36,13 +36,11 @@ run_hook ()
         if [ -f "${encfile}" ]; then
             while true; do
                 read -rsp "${prompt}" password
-                passwordHash=${password}
                 i=0
                 while [ ${i} -lt ${iteration} ]; do
-                    passwordHash=`echo -n ${passwordHash} | openssl dgst -whirlpool -hex 2> /dev/null | cut -d ' ' -f 2`
+                    password=`echo -n "${password}" | openssl dgst -whirlpool -hex 2> /dev/null | cut -d ' ' -f 2`
                     i=$(( ${i} + 1 ))
                 done
-                password=${password}${passwordHash}
                 openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${decfile}" >/dev/null 2>&1
                 retcode="$?"
                 if [ "${retcode}" != "0" ]; then
