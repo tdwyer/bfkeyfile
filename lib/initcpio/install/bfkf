@@ -17,7 +17,7 @@ cat<<HELPEOF
 
   mkinitcpio.conf:
   MODULES: add ext4 vfat or whatever the type of filesystem the keyfile is on
-  HOOKS=" ... usb bfkf encrypt ... filesystems ..."
+  HOOKS=" ... bfkf encrypt ... filesystems ..."
 
   Kernel Parameters:
   There is no need for cryptkey=
