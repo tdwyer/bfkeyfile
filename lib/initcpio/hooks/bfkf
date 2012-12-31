@@ -1,7 +1,4 @@
 #!/usr/bin/ash
-#
-# for loop variable error line 40
-#
 
 run_hook ()
 {
@@ -40,8 +37,10 @@ run_hook ()
             while true; do
                 read -rsp "${prompt}" password
                 passwordHash=${password}
-                for (( i=1; ${i}<=${iteration}; i++ )); do
-                    passwordHash=`echo ${passwordHash} | openssl dgst -whirlpool -hex | cut -d ' ' -f 2`
+                i=0
+                while [ ${i} -lt ${iteration} ]; do
+                    passwordHash=`echo ${passwordHash} | openssl dgst -whirlpool -hex 2> /dev/null | cut -d ' ' -f 2`
+                    i=$(( ${i} + 1 ))
                 done
                 password=${password}${passwordHash}
                 openssl bf-cbc -pass pass:"${password}" -d -in "${encfile}" -out "${decfile}" >/dev/null 2>&1
