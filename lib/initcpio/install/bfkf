@@ -13,7 +13,7 @@ cat<<HELPEOF
 
   You must use gen-cryptkey create the encrypted enc_keyfile.bin
   The password is hashed with Whirlpool 1000 times
-  Then your password + Hash is used to encrypt the keyfile
+  Then your password Hash is used to encrypt the keyfile
 
   mkinitcpio.conf:
   MODULES: add ext4 vfat or whatever the type of filesystem the keyfile is on
